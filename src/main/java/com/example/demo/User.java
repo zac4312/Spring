@@ -33,7 +33,7 @@ public class User {
     
     public long getId(){
         return Id;
-    } public void setId(long id) {this.Id = id;}
+    } public void setId(Long id) {this.Id = id;}
 
     public String getName(){
         return name;

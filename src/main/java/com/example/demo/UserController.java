@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/user")
@@ -43,9 +44,26 @@ public User createUser(@RequestBody User user) {
         return userService.IdUsers(Id);
     }
     
-    @DeleteMapping("/{Id}")
+    @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Long Id) {
          userService.deleteUser(Id);
          return "User Deleted";
     }
+    
+    @PutMapping("/{Id}")
+public ResponseEntity<User> updateUser(@PathVariable Long Id, @RequestBody User updatedUser) {
+    Optional<User> existingUser = userService.IdUsers(Id);
+
+    if (existingUser.isPresent()) {
+        User user = existingUser.get();
+        user.setName(updatedUser.getName());
+        user.setAge(updatedUser.getAge());
+
+        User savedUser = userService.saveUser(user);
+        return ResponseEntity.ok(savedUser);
+    } else {
+        return ResponseEntity.notFound().build();
+    }
+}
+
 }
