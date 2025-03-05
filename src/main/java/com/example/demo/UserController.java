@@ -45,25 +45,22 @@ public User createUser(@RequestBody User user) {
     }
     
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long Id) {
-         userService.deleteUser(Id);
-         return "User Deleted";
-    }
-    
-    @PutMapping("/{Id}")
-public ResponseEntity<User> updateUser(@PathVariable Long Id, @RequestBody User updatedUser) {
-    Optional<User> existingUser = userService.IdUsers(Id);
+public String deleteUser(@PathVariable Long id) {
+    userService.deleteUser(id);
+    return "User Deleted";
+}
 
+@PutMapping("/{id}")
+public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    Optional<User> existingUser = userService.IdUsers(id);
     if (existingUser.isPresent()) {
         User user = existingUser.get();
         user.setName(updatedUser.getName());
         user.setAge(updatedUser.getAge());
-
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     } else {
         return ResponseEntity.notFound().build();
     }
 }
-
 }
