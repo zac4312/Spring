@@ -19,29 +19,35 @@ public class User {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     
-    private String name;
-    private int age;
-    
-    public User(){} 
-    
-    public User(String name, int age){
-        this.name = name;
-        this.age = age;
+    private String title;
+    private String parag;
+    private String image;
+        
+    public User(){}
+
+    public User(String title, String parag, String image){
+        this.title = title;
+        this.parag = parag;
+        this.image = image;
     }
     
-    public long getId(){
-        return Id;
-    } public void setId(Long id) {this.Id = id;}
+    public Long getId(){
+        return id;
+    } public void setId(Long id) {this.id = id;}
 
-    public String getName(){
-        return name;
-    } public void setName(String name) {this.name = name;}
+    public String getTitle(){
+        return title;
+    } public void setTitle(String title) {this.title = title;}
 
     
-    public int getAge(){
-        return age;
-    } public void setAge(int age) {this.age = age;}
+    public String getParag(){
+        return parag;
+    } public void setParag(String parag) {this.parag = parag;}
+
+    public String getImage(){
+        return image;
+    } public void setImage(String image) {this.image = image;}
 
 }

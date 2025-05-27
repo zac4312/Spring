@@ -10,15 +10,47 @@
  */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
     
+    
+public User createUser(UserDTO userDTO, MultipartFile imageFile) throws IOException {
+    String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+
+    String uploadDir = "src/main/resources/static/uploads/";
+
+    Path uploadPath = Paths.get(uploadDir);
+    if (!Files.exists(uploadPath)) {
+        Files.createDirectories(uploadPath);
+    }
+
+    Path filePath = uploadPath.resolve(fileName);
+
+    Files.write(filePath, imageFile.getBytes());
+
+    User user = new User();
+    user.setTitle(userDTO.getTitle());
+    user.setParag(userDTO.getParag());
+    user.setImage(fileName);  
+
+    userRepository.save(user);
+
+    return user;
+}
+
+
     public User saveUser(User user){
         return userRepository.save(user);
     }
@@ -27,21 +59,21 @@ public class UserService {
         return userRepository.findAll();
     }
     
-    public Optional<User> IdUsers(Long Id) {
-        return userRepository.findById(Id);
+    public Optional<User> IdUsers(Long id) {
+        return userRepository.findById(id);
     }
     
-    public void deleteUser(Long Id) {
-        userRepository.deleteById(Id);
-    }
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }   
     
-    public User updateUser(Long Id, User updatedUser) {
-    Optional<User> existingUser = userRepository.findById(Id);
+    public User updateUser(Long id, User updatedUser) {
+    Optional<User> existingUser = userRepository.findById(id);
     
     if (existingUser.isPresent()) {
         User user = existingUser.get();
-        user.setName(updatedUser.getName());
-        user.setAge(updatedUser.getAge());
+        user.setTitle(updatedUser.getTitle());
+        user.setParag(updatedUser.getParag());
         return userRepository.save(user);
     } else {
         throw new RuntimeException("User not found");

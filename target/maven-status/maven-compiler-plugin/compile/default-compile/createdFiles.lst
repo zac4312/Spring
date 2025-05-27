@@ -1,5 +1,6 @@
 com\example\demo\DemoApplication.class
 com\example\demo\User.class
+com\example\demo\UserDTO.class
 com\example\demo\UserController.class
 com\example\demo\UserRepository.class
 com\example\demo\UserService.class

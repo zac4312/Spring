@@ -12,9 +12,17 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
@@ -30,18 +38,29 @@ public class UserController {
     }
     
 @PostMapping("/save")
-public User createUser(@RequestBody User user) {
-        return userService.saveUser(user);
+public ResponseEntity<?> createUser(
+        @RequestPart("user") UserDTO userDTO,
+        @RequestPart("image") MultipartFile imageFile) {
+
+    System.out.println("DTO Title: " + userDTO.getTitle());
+    System.out.println("DTO Parag: " + userDTO.getParag());
+
+    try {
+        User savedUser = userService.createUser(userDTO, imageFile);
+        return ResponseEntity.ok(savedUser);
+    } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed: " + e.getMessage());
+    }
 }
-    
+
     @GetMapping
     public List<User> listUser(){
         return userService.listUsers();
     }
     
-    @GetMapping("/{Id}")
-    public Optional<User> IdUser(@PathVariable Long Id){
-        return userService.IdUsers(Id);
+    @GetMapping("/{id}")
+    public Optional<User> IdUser(@PathVariable Long id){
+        return userService.IdUsers(id);
     }
     
     @DeleteMapping("/{id}")
@@ -55,12 +74,13 @@ public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User 
     Optional<User> existingUser = userService.IdUsers(id);
     if (existingUser.isPresent()) {
         User user = existingUser.get();
-        user.setName(updatedUser.getName());
-        user.setAge(updatedUser.getAge());
+        user.setTitle(updatedUser.getTitle());
+        user.setParag(updatedUser.getParag());
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     } else {
         return ResponseEntity.notFound().build();
     }
 }
+
 }
