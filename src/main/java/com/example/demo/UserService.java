@@ -44,6 +44,10 @@ public User createUser(UserDTO userDTO, MultipartFile imageFile) throws IOExcept
     user.setTitle(userDTO.getTitle());
     user.setParag(userDTO.getParag());
     user.setImage(fileName);  
+    user.setMemories(userDTO.isMemories());
+    user.setFood(userDTO.isFood());
+    user.setMedia(userDTO.isMedia());
+    user.setSport(userDTO.isSport());
 
     userRepository.save(user);
 
@@ -74,6 +78,10 @@ public User createUser(UserDTO userDTO, MultipartFile imageFile) throws IOExcept
         User user = existingUser.get();
         user.setTitle(updatedUser.getTitle());
         user.setParag(updatedUser.getParag());
+        user.setMemories(updatedUser.getMemories());
+        user.setFood(updatedUser.getFood());
+        user.setMedia(updatedUser.getMedia());
+        user.setSport(updatedUser.getSport());
         return userRepository.save(user);
     } else {
         throw new RuntimeException("User not found");

@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 @RestController
@@ -37,13 +38,18 @@ public class UserController {
     return "form";
     }
     
-@PostMapping("/save")
+@PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 public ResponseEntity<?> createUser(
         @RequestPart("user") UserDTO userDTO,
-        @RequestPart("image") MultipartFile imageFile) {
+        @RequestPart("image") MultipartFile imageFile) {    
 
     System.out.println("DTO Title: " + userDTO.getTitle());
     System.out.println("DTO Parag: " + userDTO.getParag());
+    
+    System.out.println("got memory: " + userDTO.isMemories());
+    System.out.println("got sport: " + userDTO.isSport());
+    System.out.println("got medea: " + userDTO.isMedia());
+    System.out.println("got food: " + userDTO.isFood());
 
     try {
         User savedUser = userService.createUser(userDTO, imageFile);
@@ -76,6 +82,11 @@ public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User 
         User user = existingUser.get();
         user.setTitle(updatedUser.getTitle());
         user.setParag(updatedUser.getParag());
+        user.setMemories(updatedUser.getMemories());
+        user.setFood(updatedUser.getFood());
+        user.setMedia(updatedUser.getMedia());
+        user.setSport(updatedUser.getSport());
+
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     } else {
