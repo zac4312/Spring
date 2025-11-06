@@ -19,3 +19,5 @@ Tech Stack:
    - Spring Data JPA|JDBC
    - Maven
 - REST API
+- Android Studio
+  - retrofit 
